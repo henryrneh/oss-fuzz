@@ -26,7 +26,7 @@ public class YamlFuzzer {
       Yaml yaml = new Yaml(new SafeConstructor());
       yaml.load(data.consumeRemainingAsString());
     }
-    catch (YAMLException | IllegalArgumentException e){
+    catch (YAMLException | IllegalArgumentException | ClassCastException e){
       return;
     }
   }
