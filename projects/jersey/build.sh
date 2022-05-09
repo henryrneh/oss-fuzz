@@ -16,9 +16,10 @@
 ################################################################################
 
 MAVEN_ARGS="-Djavac.src.version=15 -Djavac.target.version=15 -DskipTests"
-$MVN package $MAVEN_ARGS
+$MVN package $MAVEN_ARGS -Pstaging
 CURRENT_VERSION=$($MVN org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate \
  -Dexpression=project.version -q -DforceStdout)
+
 cp "core-server/target/jersey-server-$CURRENT_VERSION.jar" "$OUT/jersey-server.jar"
 cp "core-common/target/jersey-common-$CURRENT_VERSION.jar" "$OUT/jersey-common.jar"
 cp "core-client/target/jersey-client-$CURRENT_VERSION.jar" "$OUT/jersey-client.jar"

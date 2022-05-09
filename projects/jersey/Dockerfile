@@ -22,7 +22,7 @@ rm -rf maven.zip
 
 ENV MVN $SRC/maven/apache-maven-3.6.3/bin/mvn
 
-RUN git clone --depth 1 https://github.com/eclipse-ee4j/jersey
+RUN git clone --depth 1 https://github.com/eclipse-ee4j/jersey -b 3.1
 
 COPY build.sh $SRC/
 COPY HttpHeaderReaderFuzzer.java $SRC/
