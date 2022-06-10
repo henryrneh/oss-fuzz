@@ -19,10 +19,12 @@ cp -r "/usr/lib/jvm/java-17-openjdk-amd64/" "$JAVA_HOME"
 
 $ANT
 
-cp "output/build/lib/tomcat-coyote.jar" "$OUT/tomcat-coyote.jar"
-cp "output/build/lib/tomcat-util.jar" "$OUT/tomcat-util.jar"
+cd $SRC/tomcat/output/classes && jar cfv classes.jar . && mv ./classes.jar $OUT && cd $SRC/tomcat
 
-ALL_JARS="tomcat-coyote.jar tomcat-util.jar"
+LDAP_VERSION=$(curl -s 'https://api.github.com/repos/pingidentity/ldapsdk/tags?per_page=1' | jq -r .[].name)
+wget -O "$OUT/unboundid-ldapsdk.jar" "https://repo1.maven.org/maven2/com/unboundid/unboundid-ldapsdk/$LDAP_VERSION/unboundid-ldapsdk-$LDAP_VERSION.jar"
+
+ALL_JARS="classes.jar unboundid-ldapsdk.jar"
 
 # The classpath at build-time includes the project jars in $OUT as well as the
 # Jazzer API.
@@ -34,7 +36,7 @@ RUNTIME_CLASSPATH=$(echo $ALL_JARS | xargs printf -- "\$this_dir/%s:"):\$this_di
 for fuzzer in $(find $SRC -name '*Fuzzer.java'); do
   fuzzer_basename=$(basename -s .java $fuzzer)
   javac -cp $BUILD_CLASSPATH $fuzzer --release 17
-  cp $SRC/$fuzzer_basename.class $OUT/
+  cp $SRC/[$fuzzer_basename]*.class $OUT/
 
   # Create an execution wrapper that executes Jazzer with the correct arguments.
   echo "#!/bin/sh
