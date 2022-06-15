@@ -46,7 +46,7 @@ index 2a67d5346f..6c53a163cd 100644
  
    <target name="download-test-compile"' > patch.diff
 
-git apply patch.diff -v
+git apply patch.diff
 
 $ANT
 
